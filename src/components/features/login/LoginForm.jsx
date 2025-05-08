@@ -1,78 +1,86 @@
 import React, { useState } from 'react';
 import {
-    TextField,
-    Button,
-    InputAdornment,
-    IconButton,
-  } from '@mui/material';
-  import { Visibility, VisibilityOff } from '@mui/icons-material';
+  Box,
+  TextField,
+  Button,
+  InputAdornment,
+  IconButton,
+} from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
-function LoginForm(){
+function LoginForm() {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    showPassword: false,
+  });
 
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-        showPassword: false,
-      });
-    
-      const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-      };
-    
-      const togglePasswordVisibility = () => {
-        setFormData({ ...formData, showPassword: !formData.showPassword });
-      };
-    
-      const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log('Logging in with:', formData.email, formData.password);
-      };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    return(
-        <>
-        <form onSubmit={handleSubmit}>
-                <TextField
-                  label="Email"
-                  name="email"
-                  fullWidth
-                  margin="normal"
-                  variant="outlined"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-                <TextField
-                  label="Password"
-                  name="password"
-                  fullWidth
-                  margin="normal"
-                  variant="outlined"
-                  type={formData.showPassword ? 'text' : 'password'}
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton onClick={togglePasswordVisibility} edge="end">
-                          {formData.showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, py: 1.5 }}
-                >
-                  Login
-                </Button>
-              </form>
-        </>
-    );
+  const togglePasswordVisibility = () => {
+    setFormData({ ...formData, showPassword: !formData.showPassword });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Logging in with:', formData.email, formData.password);
+  };
+
+  return (
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        width: '100%',
+        maxWidth: 500,
+        mx: 'auto', // center horizontally
+        p: { xs: 0, sm: 1, md: 4 },
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+      }}
+    >
+      <TextField
+        label="Email"
+        name="email"
+        variant="outlined"
+        type="email"
+        value={formData.email}
+        onChange={handleChange}
+        required
+        fullWidth
+      />
+      <TextField
+        label="Password"
+        name="password"
+        variant="outlined"
+        type={formData.showPassword ? 'text' : 'password'}
+        value={formData.password}
+        onChange={handleChange}
+        required
+        fullWidth
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton onClick={togglePasswordVisibility} edge="end">
+                {formData.showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      />
+      <Button
+        type="submit"
+        variant="contained"
+        sx={{ py: 1.5 }}
+        fullWidth
+      >
+        Login
+      </Button>
+    </Box>
+  );
 }
 
 export default LoginForm;
