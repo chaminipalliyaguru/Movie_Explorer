@@ -11,6 +11,9 @@ import {
   CardMedia,
   CardContent,
 } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { Star, StarBorder } from "@mui/icons-material";
+
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 
@@ -19,6 +22,30 @@ const MovieDetail = () => {
   const [movie, setMovie] = useState(null);
   const [cast, setCast] = useState([]);
   const [trailerUrl, setTrailerUrl] = useState("");
+  const [isFavorite, setIsFavorite] = useState(false);
+
+// Check if this movie is in favorites
+useEffect(() => {
+  const favorites = JSON.parse(localStorage.getItem("favoriteMovies")) || [];
+  setIsFavorite(favorites.includes(id));
+}, [id]);
+
+// Toggle favorite
+const toggleFavorite = () => {
+  const favorites = JSON.parse(localStorage.getItem("favoriteMovies")) || [];
+  let updatedFavorites;
+
+  if (favorites.includes(id)) {
+    updatedFavorites = favorites.filter((favId) => favId !== id);
+    setIsFavorite(false);
+  } else {
+    updatedFavorites = [...favorites, id];
+    setIsFavorite(true);
+  }
+
+  localStorage.setItem("favoriteMovies", JSON.stringify(updatedFavorites));
+};
+
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -63,9 +90,15 @@ const MovieDetail = () => {
 
         {/* Right: Movie Info */}
         <Grid item xs={12} size={{ sm: 12, sm: 6 }}>
-          <Typography variant="h3" gutterBottom>
-            {movie.title}
-          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+  <Typography variant="h4" gutterBottom sx={{ mr: 1 }}>
+    {movie.title}
+  </Typography>
+  <IconButton onClick={toggleFavorite} color="warning">
+    {isFavorite ? <Star /> : <StarBorder />}
+  </IconButton>
+</Box>
+
           <Typography variant="body1" sx={{ mt: 2 }}>
             {movie.overview}
           </Typography>
