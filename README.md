@@ -23,7 +23,7 @@ Movie Explorer is a React-based web application that allows users to search for 
 
 ```bash
 git clone https://github.com/chaminipalliyaguru/Movie_Explorer.git
-cd movie-explorer
+cd Movie_Explorer
 ```
 
 ### 2. Install Dependencies
