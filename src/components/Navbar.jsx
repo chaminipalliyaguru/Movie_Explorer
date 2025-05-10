@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -16,8 +16,6 @@ import { Link } from "react-router-dom";
 
 const navItems = [
   { label: "Home", path: "/" },
-  { label: "About", path: "/about" },
-  { label: "Services", path: "/services" },
   { label: "Login", path: "/login" },
 ];
 

@@ -14,7 +14,6 @@ import {
 import { IconButton } from "@mui/material";
 import { Star, StarBorder } from "@mui/icons-material";
 
-
 const API_KEY = import.meta.env.VITE_API_KEY;
 
 const MovieDetail = () => {
@@ -24,28 +23,26 @@ const MovieDetail = () => {
   const [trailerUrl, setTrailerUrl] = useState("");
   const [isFavorite, setIsFavorite] = useState(false);
 
-// Check if this movie is in favorites
-useEffect(() => {
-  const favorites = JSON.parse(localStorage.getItem("favoriteMovies")) || [];
-  setIsFavorite(favorites.includes(id));
-}, [id]);
+  useEffect(() => {
+    const favorites = JSON.parse(localStorage.getItem("favoriteMovies")) || [];
+    setIsFavorite(favorites.includes(id));
+  }, [id]);
 
-// Toggle favorite
-const toggleFavorite = () => {
-  const favorites = JSON.parse(localStorage.getItem("favoriteMovies")) || [];
-  let updatedFavorites;
+  // Toggle favorite
+  const toggleFavorite = () => {
+    const favorites = JSON.parse(localStorage.getItem("favoriteMovies")) || [];
+    let updatedFavorites;
 
-  if (favorites.includes(id)) {
-    updatedFavorites = favorites.filter((favId) => favId !== id);
-    setIsFavorite(false);
-  } else {
-    updatedFavorites = [...favorites, id];
-    setIsFavorite(true);
-  }
+    if (favorites.includes(id)) {
+      updatedFavorites = favorites.filter((favId) => favId !== id);
+      setIsFavorite(false);
+    } else {
+      updatedFavorites = [...favorites, id];
+      setIsFavorite(true);
+    }
 
-  localStorage.setItem("favoriteMovies", JSON.stringify(updatedFavorites));
-};
-
+    localStorage.setItem("favoriteMovies", JSON.stringify(updatedFavorites));
+  };
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -68,10 +65,10 @@ const toggleFavorite = () => {
   if (!movie) return <Typography>Loading...</Typography>;
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4 }}>
+    <Container maxWidth="lg" sx={{ mt: 8 }}>
       <Grid container spacing={2}>
         {/* Left: Movie Poster */}
-        <Grid item xs={12} size={{ sm: 12, sm: 6 }}>
+        <Grid item xs={12} size={{ sm: 6 }}>
           <Box
             component="img"
             src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -89,15 +86,15 @@ const toggleFavorite = () => {
         </Grid>
 
         {/* Right: Movie Info */}
-        <Grid item xs={12} size={{ sm: 12, sm: 6 }}>
+        <Grid item xs={12} size={{ sm: 6 }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-  <Typography variant="h4" gutterBottom sx={{ mr: 1 }}>
-    {movie.title}
-  </Typography>
-  <IconButton onClick={toggleFavorite} color="warning">
-    {isFavorite ? <Star /> : <StarBorder />}
-  </IconButton>
-</Box>
+            <Typography variant="h4" gutterBottom sx={{ mr: 1 }}>
+              {movie.title}
+            </Typography>
+            <IconButton onClick={toggleFavorite} color="warning">
+              {isFavorite ? <Star /> : <StarBorder />}
+            </IconButton>
+          </Box>
 
           <Typography variant="body1" sx={{ mt: 2 }}>
             {movie.overview}
@@ -146,7 +143,7 @@ const toggleFavorite = () => {
       </Grid>
 
       {/* Cast Section */}
-      <Typography variant="h4" sx={{ mt: 6, mb: 2 }}>
+      <Typography variant="h4" sx={{ mt: 14, mb: 2 }}>
         Top Cast
       </Typography>
       <Grid container spacing={2}>
@@ -154,7 +151,7 @@ const toggleFavorite = () => {
           <Grid item xs={12} sm={6} md={2} key={actor.id} sx={{ mb: 2 }}>
             <Card
               sx={{
-                width: 180, 
+                width: 180,
                 mx: "auto",
                 height: "100%",
                 textAlign: "center",
