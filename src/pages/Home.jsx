@@ -18,21 +18,31 @@ function Home() {
   const [rating, setRating] = useState(0);
 
   const fetchMovies = async () => {
-    try {
-      const res = await axios.get(`https://api.themoviedb.org/3/discover/movie`, {
-        params: {
-          api_key: API_KEY,
-          query: search || undefined,
-          with_genres: genre || undefined,
-          primary_release_year: year || undefined,
-          "vote_average.gte": rating,
-        },
-      });
-      setMovies(res.data.results);
-    } catch (err) {
-      console.error("Error fetching movies:", err);
+  try {
+    let url = "";
+    let params = {
+      api_key: API_KEY,
+    };
+
+    if (search.length > 2) {
+      // Use text search
+      url = `https://api.themoviedb.org/3/search/movie`;
+      params.query = search;
+    } else {
+      // Use filters
+      url = `https://api.themoviedb.org/3/discover/movie`;
+      if (genre) params.with_genres = genre;
+      if (year) params.primary_release_year = year;
+      if (rating > 0) params["vote_average.gte"] = rating;
     }
-  };
+
+    const res = await axios.get(url, { params });
+    setMovies(res.data.results);
+  } catch (err) {
+    console.error("Error fetching movies:", err);
+  }
+};
+
 
   useEffect(() => {
     const savedSearch = localStorage.getItem("lastSearch");
@@ -69,7 +79,7 @@ function Home() {
       <MovieList movies={movies} />   
 
       <TrendingMovies />
-      
+
     </Container>
   );
 }

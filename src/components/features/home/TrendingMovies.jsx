@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import MovieCard from "./MovieCard";
 import {
@@ -51,11 +51,12 @@ function TrendingMovies() {
 
   return (
     <Box sx={{ mt: 6, mb: 6 }}>
-      <Grid container spacing={3}>
+      <Grid container spacing={3} justifyContent="center">
         {trending.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}
       </Grid>
+
       {hasMore && (
         <Box textAlign="center" mt={4}>
           <Button variant="contained" onClick={handleLoadMore} disabled={loading}>

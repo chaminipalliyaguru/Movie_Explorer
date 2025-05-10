@@ -31,18 +31,6 @@ function Navbar() {
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
-      <Typography
-        component={Link}
-        to="/"
-        variant="h6"
-        sx={{
-          my: 2,
-          textDecoration: "none",
-          color: "inherit",
-        }}
-      >
-        Movie Exporer
-      </Typography>
 
       <List>
         {navItems.map((item) => (
@@ -75,7 +63,6 @@ function Navbar() {
             variant="h6"
             sx={{
               flexGrow: 1,
-              display: { xs: "none", sm: "block" },
               textDecoration: "none",
               color: "inherit",
             }}
