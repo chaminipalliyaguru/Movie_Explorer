@@ -22,7 +22,7 @@ Movie Explorer is a React-based web application that allows users to search for 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/movie-explorer.git
+git clone https://github.com/chaminipalliyaguru/Movie_Explorer.git
 cd movie-explorer
 ```
 
