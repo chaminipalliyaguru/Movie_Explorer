@@ -20,7 +20,7 @@ function Navbar () {
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-        MyApp
+        Movie Exporer
       </Typography>
       <List>
         {navItems.map((item) => (
@@ -45,7 +45,7 @@ function Navbar () {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
-            MyApp
+            Movie Exporer
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {navItems.map((item) => (

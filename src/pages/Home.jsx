@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Box,
@@ -30,6 +30,14 @@ function Home() {
     }
   };
 
+  useEffect(() => {
+    const savedSearch = localStorage.getItem("lastSearch");
+    if (savedSearch) {
+      setSearch(savedSearch);
+      fetchMovies(savedSearch);
+    }
+  }, []);
+
   return (
     <Container maxWidth="lg">
       {/* Search Bar */}
@@ -39,9 +47,11 @@ function Home() {
           variant="outlined"
           value={search}
           onChange={(e) => {
-            setSearch(e.target.value);
-            if (e.target.value.length > 2) {
-              fetchMovies(e.target.value);
+            const value = e.target.value;
+            setSearch(value);
+            localStorage.setItem("lastSearch", value);
+            if (value.length > 2) {
+              fetchMovies(value);
             } else {
               setMovies([]);
             }

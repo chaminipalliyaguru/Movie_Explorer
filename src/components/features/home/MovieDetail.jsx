@@ -7,7 +7,6 @@ import {
   Box,
   Chip,
   Grid,
-  Button,
   Card,
   CardMedia,
   CardContent,
@@ -43,29 +42,29 @@ const MovieDetail = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <Grid container spacing={4}>
+      <Grid container spacing={2}>
         {/* Left: Movie Poster */}
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} size={{ sm: 12, sm: 6 }}>
           <Box
             component="img"
             src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
             alt={movie.title}
             sx={{
-              width: 400,
-              height: 500,
+              width: "100%",
+              maxWidth: 400,
+              height: "auto",
               borderRadius: 2,
               boxShadow: 3,
+              mx: "auto",
+              display: "block",
             }}
           />
         </Grid>
 
         {/* Right: Movie Info */}
-        <Grid item xs={12} md={8}>
-          <Typography variant="h4" gutterBottom>
+        <Grid item xs={12} size={{ sm: 12, sm: 6 }}>
+          <Typography variant="h3" gutterBottom>
             {movie.title}
-          </Typography>
-          <Typography variant="subtitle1" gutterBottom>
-            Release Date: {movie.release_date}
           </Typography>
           <Typography variant="body1" sx={{ mt: 2 }}>
             {movie.overview}
@@ -78,30 +77,57 @@ const MovieDetail = () => {
             ))}
           </Box>
 
-          {/* Trailer Button */}
+          <Typography variant="subtitle1" gutterBottom>
+            Release Date: {movie.release_date}
+          </Typography>
+
+          {/* Trailer */}
           {trailerUrl && (
-            <Button
-              variant="contained"
-              color="secondary"
-              href={trailerUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              sx={{ mt: 3 }}
+            <Box
+              sx={{
+                mt: 3,
+                width: "100%",
+                position: "relative",
+                paddingTop: "56.25%", // 16:9 aspect ratio
+              }}
             >
-              🎬 Watch Trailer
-            </Button>
+              <iframe
+                src={trailerUrl.replace("watch?v=", "embed/")}
+                title={movie.title}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "8px",
+                }}
+              />
+            </Box>
           )}
         </Grid>
       </Grid>
 
       {/* Cast Section */}
-      <Typography variant="h5" sx={{ mt: 6, mb: 2 }}>
+      <Typography variant="h4" sx={{ mt: 6, mb: 2 }}>
         Top Cast
       </Typography>
-      <Grid container spacing={3}>
+      <Grid container spacing={2}>
         {cast.map((actor) => (
-          <Grid item xs={12} sm={6} md={4} lg={2} key={actor.id}>
-            <Card sx={{ height: "100%", textAlign: "center", p: 1 }}>
+          <Grid item xs={12} sm={6} md={2} key={actor.id} sx={{ mb: 2 }}>
+            <Card
+              sx={{
+                width: 180, 
+                mx: "auto",
+                height: "100%",
+                textAlign: "center",
+                p: 1,
+              }}
+            >
               <CardMedia
                 component="img"
                 height="220"
@@ -114,8 +140,10 @@ const MovieDetail = () => {
                 sx={{ borderRadius: 2 }}
               />
               <CardContent>
-                <Typography variant="subtitle1">{actor.name}</Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="subtitle1" noWrap>
+                  {actor.name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" noWrap>
                   as {actor.character}
                 </Typography>
               </CardContent>
