@@ -4,11 +4,7 @@ import MovieCard from "./MovieCard";
 import {
   Box,
   Grid,
-  Typography,
-  Card,
-  CardMedia,
-  CardContent,
-  Rating,
+  Typography
 } from "@mui/material";
 
 function TrendingMovies() {
