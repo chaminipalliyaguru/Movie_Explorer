@@ -41,3 +41,12 @@ VITE_API_KEY=your_api_key_here
 ```bash
 npm run dev
 ```
+
+## 🔑 Login Credentials
+
+Use the following credentials to log in:
+
+- **Email**: `user@gmail.com`
+- **Password**: `user`
+
+After a successful login, you'll be redirected to the home page.
