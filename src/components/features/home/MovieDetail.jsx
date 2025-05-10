@@ -1,15 +1,48 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import { Container, Typography, Box, Chip, Grid, Button } from '@mui/material';
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import {
+  Container,
+  Typography,
+  Box,
+  Chip,
+  Grid,
+  Card,
+  CardMedia,
+  CardContent,
+} from "@mui/material";
+import { IconButton } from "@mui/material";
+import { Star, StarBorder } from "@mui/icons-material";
 
-const API_KEY = 'YOUR_TMDB_API_KEY';
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 const MovieDetail = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
   const [cast, setCast] = useState([]);
-  const [trailerUrl, setTrailerUrl] = useState('');
+  const [trailerUrl, setTrailerUrl] = useState("");
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    const favorites = JSON.parse(localStorage.getItem("favoriteMovies")) || [];
+    setIsFavorite(favorites.includes(id));
+  }, [id]);
+
+  // Toggle favorite
+  const toggleFavorite = () => {
+    const favorites = JSON.parse(localStorage.getItem("favoriteMovies")) || [];
+    let updatedFavorites;
+
+    if (favorites.includes(id)) {
+      updatedFavorites = favorites.filter((favId) => favId !== id);
+      setIsFavorite(false);
+    } else {
+      updatedFavorites = [...favorites, id];
+      setIsFavorite(true);
+    }
+
+    localStorage.setItem("favoriteMovies", JSON.stringify(updatedFavorites));
+  };
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -17,11 +50,13 @@ const MovieDetail = () => {
         `https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&append_to_response=videos,credits`
       );
       setMovie(data);
-      setCast(data.credits.cast.slice(0, 5));
+      setCast(data.credits.cast.slice(0, 6));
       const trailer = data.videos.results.find(
-        (vid) => vid.type === 'Trailer' && vid.site === 'YouTube'
+        (vid) => vid.type === "Trailer" && vid.site === "YouTube"
       );
-      setTrailerUrl(trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : '');
+      setTrailerUrl(
+        trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : ""
+      );
     };
 
     fetchMovieDetails();
@@ -30,45 +65,122 @@ const MovieDetail = () => {
   if (!movie) return <Typography>Loading...</Typography>;
 
   return (
-    <Container sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>{movie.title}</Typography>
-      <Typography variant="subtitle1" gutterBottom>{movie.release_date}</Typography>
-      <Typography variant="body1" sx={{ mt: 2 }}>{movie.overview}</Typography>
-
-      {/* Genres */}
-      <Box sx={{ my: 2 }}>
-        {movie.genres.map((genre) => (
-          <Chip key={genre.id} label={genre.name} sx={{ mr: 1, mb: 1 }} />
-        ))}
-      </Box>
-
-      {/* Cast */}
-      <Typography variant="h6" sx={{ mt: 4 }}>Top Cast</Typography>
-      <Box>
-        <Grid container spacing={2}>
-          {cast.map((actor) => (
-            <Grid item key={actor.id}>
-              <Typography>{actor.name}</Typography>
-              <Typography variant="body2" color="text.secondary">as {actor.character}</Typography>
-            </Grid>
-          ))}
+    <Container maxWidth="lg" sx={{ mt: 8 }}>
+      <Grid container spacing={2}>
+        {/* Left: Movie Poster */}
+        <Grid item xs={12} size={{ sm: 6 }}>
+          <Box
+            component="img"
+            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+            alt={movie.title}
+            sx={{
+              width: "100%",
+              maxWidth: 400,
+              height: "auto",
+              borderRadius: 2,
+              boxShadow: 3,
+              mx: "auto",
+              display: "block",
+            }}
+          />
         </Grid>
-      </Box>
 
-      {/* Trailer */}
-      {trailerUrl && (
-        <Box sx={{ mt: 4 }}>
-          <Button
-            variant="contained"
-            color="primary"
-            href={trailerUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Watch Trailer
-          </Button>
-        </Box>
-      )}
+        {/* Right: Movie Info */}
+        <Grid item xs={12} size={{ sm: 6 }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography variant="h4" gutterBottom sx={{ mr: 1 }}>
+              {movie.title}
+            </Typography>
+            <IconButton onClick={toggleFavorite} color="warning">
+              {isFavorite ? <Star /> : <StarBorder />}
+            </IconButton>
+          </Box>
+
+          <Typography variant="body1" sx={{ mt: 2 }}>
+            {movie.overview}
+          </Typography>
+
+          {/* Genres */}
+          <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap" }}>
+            {movie.genres.map((genre) => (
+              <Chip key={genre.id} label={genre.name} sx={{ mr: 1, mb: 1 }} />
+            ))}
+          </Box>
+
+          <Typography variant="subtitle1" gutterBottom>
+            Release Date: {movie.release_date}
+          </Typography>
+
+          {/* Trailer */}
+          {trailerUrl && (
+            <Box
+              sx={{
+                mt: 3,
+                width: "100%",
+                position: "relative",
+                paddingTop: "56.25%", // 16:9 aspect ratio
+              }}
+            >
+              <iframe
+                src={trailerUrl.replace("watch?v=", "embed/")}
+                title={movie.title}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "8px",
+                }}
+              />
+            </Box>
+          )}
+        </Grid>
+      </Grid>
+
+      {/* Cast Section */}
+      <Typography variant="h4" sx={{ mt: 14, mb: 2 }}>
+        Top Cast
+      </Typography>
+      <Grid container spacing={2}>
+        {cast.map((actor) => (
+          <Grid item xs={12} sm={6} md={2} key={actor.id} sx={{ mb: 2 }}>
+            <Card
+              sx={{
+                width: 180,
+                mx: "auto",
+                height: "100%",
+                textAlign: "center",
+                p: 1,
+              }}
+            >
+              <CardMedia
+                component="img"
+                height="220"
+                image={
+                  actor.profile_path
+                    ? `https://image.tmdb.org/t/p/w300${actor.profile_path}`
+                    : "https://via.placeholder.com/300x450?text=No+Image"
+                }
+                alt={actor.name}
+                sx={{ borderRadius: 2 }}
+              />
+              <CardContent>
+                <Typography variant="subtitle1" noWrap>
+                  {actor.name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" noWrap>
+                  as {actor.character}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
     </Container>
   );
 };

@@ -1,69 +1,66 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  Box,
-  TextField,
-  Grid,
-  Typography,
-  Container,
-} from "@mui/material";
+import { Container } from "@mui/material";
 import TrendingMovies from "../components/features/home/TrendingMovies";
-import MovieCard from "../components/features/home/MovieCard";
+import MovieList from "../components/features/home/MovieList";
+import SearchFilters from "../components/features/home/SearchFilters";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 
 function Home() {
   const [search, setSearch] = useState("");
   const [movies, setMovies] = useState([]);
+  const [genre, setGenre] = useState("");
+  const [year, setYear] = useState("");
+  const [rating, setRating] = useState(0);
 
-  const fetchMovies = async (query) => {
+  const fetchMovies = async () => {
     try {
-      const res = await axios.get(`https://api.themoviedb.org/3/search/movie`, {
+      const res = await axios.get(`https://api.themoviedb.org/3/discover/movie`, {
         params: {
           api_key: API_KEY,
-          query,
+          query: search || undefined,
+          with_genres: genre || undefined,
+          primary_release_year: year || undefined,
+          "vote_average.gte": rating,
         },
       });
       setMovies(res.data.results);
     } catch (err) {
-      console.error("Error fetching searched movies:", err);
+      console.error("Error fetching movies:", err);
     }
   };
 
+  useEffect(() => {
+    const savedSearch = localStorage.getItem("lastSearch");
+    if (savedSearch) {
+      setSearch(savedSearch);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (search.length > 2 || genre || year || rating > 0) {
+      fetchMovies();
+    } else {
+      setMovies([]);
+    }
+  }, [search, genre, year, rating]);
+
   return (
     <Container maxWidth="lg">
-      {/* Search Bar */}
-      <Box sx={{ mt: 4 }}>
-        <TextField
-          label="Search for movies..."
-          variant="outlined"
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            if (e.target.value.length > 2) {
-              fetchMovies(e.target.value);
-            } else {
-              setMovies([]);
-            }
-          }}
-        />
-      </Box>
+      <SearchFilters
+        search={search}
+        setSearch={setSearch}
+        genre={genre}
+        setGenre={setGenre}
+        year={year}
+        setYear={setYear}
+        rating={rating}
+        setRating={setRating}
+      />
 
-      {/* Search Results */}
-      {search && (
-        <Box sx={{ mt: 4 }}>
-          <Typography variant="h5" gutterBottom>
-            Search Results
-          </Typography>
-          <Grid container spacing={3}>
-            {movies.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} />
-            ))}
-          </Grid>
-        </Box>
-      )}
+      <MovieList movies={movies} />
 
-      {/* Trending Movies */}
       <TrendingMovies />
     </Container>
   );
