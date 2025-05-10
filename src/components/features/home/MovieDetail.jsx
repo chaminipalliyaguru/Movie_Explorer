@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import {
@@ -51,8 +51,8 @@ const MovieDetail = () => {
             src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
             alt={movie.title}
             sx={{
-              width: "100%",
-              height: "auto",
+              width: 400,
+              height: 500,
               borderRadius: 2,
               boxShadow: 3,
             }}
