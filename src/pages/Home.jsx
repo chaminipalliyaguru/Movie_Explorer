@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Container } from "@mui/material";
+import {
+  Container,
+  Typography,
+} from "@mui/material";
 import TrendingMovies from "../components/features/home/TrendingMovies";
 import MovieList from "../components/features/home/MovieList";
 import SearchFilters from "../components/features/home/SearchFilters";
@@ -47,7 +50,7 @@ function Home() {
   }, [search, genre, year, rating]);
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={{ mt: 4 }}>
       <SearchFilters
         search={search}
         setSearch={setSearch}
@@ -59,9 +62,14 @@ function Home() {
         setRating={setRating}
       />
 
-      <MovieList movies={movies} />
+      <Typography variant="h5" gutterBottom>
+        {search ? "Search Results" : "Popular Movies"}
+      </Typography>
+
+      <MovieList movies={movies} />   
 
       <TrendingMovies />
+      
     </Container>
   );
 }
