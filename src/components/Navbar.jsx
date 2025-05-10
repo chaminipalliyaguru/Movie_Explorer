@@ -10,7 +10,7 @@ const navItems = [
   { label: 'Login', path: '/login' },
 ];
 
-const Navbar = () => {
+function Navbar () {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
