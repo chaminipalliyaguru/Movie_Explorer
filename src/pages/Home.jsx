@@ -1,25 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import axios from "axios";
 import {
   Box,
   TextField,
   Grid,
   Typography,
-  Card,
-  CardMedia,
-  CardContent,
-  Rating,
   Container,
 } from "@mui/material";
 import TrendingMovies from "../components/features/home/TrendingMovies";
+import MovieCard from "../components/features/home/MovieCard";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 
 function Home() {
   const [search, setSearch] = useState("");
   const [movies, setMovies] = useState([]);
- 
 
   const fetchMovies = async (query) => {
     try {
@@ -61,13 +56,15 @@ function Home() {
             Search Results
           </Typography>
           <Grid container spacing={3}>
-            {movies.map(renderMovieCard)}
+            {movies.map((movie) => (
+              <MovieCard key={movie.id} movie={movie} />
+            ))}
           </Grid>
         </Box>
       )}
 
       {/* Trending Movies */}
-      <TrendingMovies/>
+      <TrendingMovies />
     </Container>
   );
 }
