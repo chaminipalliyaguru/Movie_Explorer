@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Container } from "@mui/material";
+import {
+  Container,
+  Typography,
+} from "@mui/material";
 import TrendingMovies from "../components/features/home/TrendingMovies";
 import MovieList from "../components/features/home/MovieList";
 import SearchFilters from "../components/features/home/SearchFilters";
@@ -15,21 +18,31 @@ function Home() {
   const [rating, setRating] = useState(0);
 
   const fetchMovies = async () => {
-    try {
-      const res = await axios.get(`https://api.themoviedb.org/3/discover/movie`, {
-        params: {
-          api_key: API_KEY,
-          query: search || undefined,
-          with_genres: genre || undefined,
-          primary_release_year: year || undefined,
-          "vote_average.gte": rating,
-        },
-      });
-      setMovies(res.data.results);
-    } catch (err) {
-      console.error("Error fetching movies:", err);
+  try {
+    let url = "";
+    let params = {
+      api_key: API_KEY,
+    };
+
+    if (search.length > 2) {
+      // Use text search
+      url = `https://api.themoviedb.org/3/search/movie`;
+      params.query = search;
+    } else {
+      // Use filters
+      url = `https://api.themoviedb.org/3/discover/movie`;
+      if (genre) params.with_genres = genre;
+      if (year) params.primary_release_year = year;
+      if (rating > 0) params["vote_average.gte"] = rating;
     }
-  };
+
+    const res = await axios.get(url, { params });
+    setMovies(res.data.results);
+  } catch (err) {
+    console.error("Error fetching movies:", err);
+  }
+};
+
 
   useEffect(() => {
     const savedSearch = localStorage.getItem("lastSearch");
@@ -47,7 +60,7 @@ function Home() {
   }, [search, genre, year, rating]);
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={{ mt: 4 }}>
       <SearchFilters
         search={search}
         setSearch={setSearch}
@@ -59,9 +72,14 @@ function Home() {
         setRating={setRating}
       />
 
-      <MovieList movies={movies} />
+      <Typography variant="h5" gutterBottom>
+        {search ? "Search Results" : "Popular Movies"}
+      </Typography>
+
+      <MovieList movies={movies} />   
 
       <TrendingMovies />
+
     </Container>
   );
 }

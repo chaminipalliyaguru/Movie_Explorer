@@ -13,6 +13,9 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
+import { useTheme } from "@mui/material";
+import { Brightness4, Brightness7 } from "@mui/icons-material";
+import { useColorMode } from "../context/ThemeContext";
 
 const navItems = [
   { label: "Home", path: "/" },
@@ -28,18 +31,6 @@ function Navbar() {
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
-      <Typography
-        component={Link}
-        to="/"
-        variant="h6"
-        sx={{
-          my: 2,
-          textDecoration: "none",
-          color: "inherit",
-        }}
-      >
-        Movie Exporer
-      </Typography>
 
       <List>
         {navItems.map((item) => (
@@ -50,6 +41,9 @@ function Navbar() {
       </List>
     </Box>
   );
+
+  const theme = useTheme();
+  const { toggleColorMode } = useColorMode();
 
   return (
     <>
@@ -69,7 +63,6 @@ function Navbar() {
             variant="h6"
             sx={{
               flexGrow: 1,
-              display: { xs: "none", sm: "block" },
               textDecoration: "none",
               color: "inherit",
             }}
@@ -89,6 +82,11 @@ function Navbar() {
               </Button>
             ))}
           </Box>
+
+          {/*Dark mode icon */}
+          <IconButton onClick={toggleColorMode} color="inherit">
+            {theme.palette.mode === "dark" ? <Brightness7 /> : <Brightness4 />}
+          </IconButton>
         </Toolbar>
       </AppBar>
 

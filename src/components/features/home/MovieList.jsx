@@ -6,10 +6,7 @@ function MovieList({ movies }) {
 
   return (
     <Box sx={{ mt: 4 }}>
-      <Typography variant="h5" gutterBottom>
-        Search Results
-      </Typography>
-      <Grid container spacing={3}>
+      <Grid container spacing={3} justifyContent="center">
         {movies.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}

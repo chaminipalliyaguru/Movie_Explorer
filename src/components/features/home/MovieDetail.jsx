@@ -146,7 +146,7 @@ const MovieDetail = () => {
       <Typography variant="h4" sx={{ mt: 14, mb: 2 }}>
         Top Cast
       </Typography>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} justifyContent="center">
         {cast.map((actor) => (
           <Grid item xs={12} sm={6} md={2} key={actor.id} sx={{ mb: 2 }}>
             <Card
