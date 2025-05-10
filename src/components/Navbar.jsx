@@ -13,6 +13,9 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
+import { useTheme } from "@mui/material";
+import { Brightness4, Brightness7 } from "@mui/icons-material";
+import { useColorMode } from "../context/ThemeContext";
 
 const navItems = [
   { label: "Home", path: "/" },
@@ -50,6 +53,9 @@ function Navbar() {
       </List>
     </Box>
   );
+
+  const theme = useTheme();
+  const { toggleColorMode } = useColorMode();
 
   return (
     <>
@@ -89,6 +95,11 @@ function Navbar() {
               </Button>
             ))}
           </Box>
+
+          {/*Dark mode icon */}
+          <IconButton onClick={toggleColorMode} color="inherit">
+            {theme.palette.mode === "dark" ? <Brightness7 /> : <Brightness4 />}
+          </IconButton>
         </Toolbar>
       </AppBar>
 
