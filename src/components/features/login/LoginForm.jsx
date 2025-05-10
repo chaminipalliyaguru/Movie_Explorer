@@ -7,6 +7,7 @@ import {
   IconButton,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom'; // Add this line
 
 function LoginForm() {
   const [formData, setFormData] = useState({
@@ -14,6 +15,8 @@ function LoginForm() {
     password: '',
     showPassword: false,
   });
+
+  const navigate = useNavigate(); // Add this line
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,7 +28,13 @@ function LoginForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Logging in with:', formData.email, formData.password);
+    const { email, password } = formData;
+
+    if (email === 'user@gmail.com' && password === 'user') {
+      navigate('/'); // Navigate to home page
+    } else {
+      alert('Invalid email or password');
+    }
   };
 
   return (
@@ -35,7 +44,7 @@ function LoginForm() {
       sx={{
         width: '100%',
         maxWidth: 500,
-        mx: 'auto', // center horizontally
+        mx: 'auto',
         p: { xs: 0, sm: 1, md: 4 },
         display: 'flex',
         flexDirection: 'column',
